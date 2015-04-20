@@ -176,7 +176,14 @@
                 </configuration>
             </plugin>
         </plugins>
-    </build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav</artifactId>
+                <version>1.0-beta-2</version>
+            </extension>
+        </extensions>
+     </build>
     <profiles>
         <profile>
             <id>snapshot</id>
@@ -257,6 +264,13 @@
     <!-- Dependencies -->
     <dependencies>
         <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
             <version>1.49</version>
@@ -307,4 +321,16 @@
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
     </properties>
+    <distributionManagement>
+        <repository>
+            <id>internal</id>
+            <name>Internal Release Repository</name>
+            <url>dav:http://archiva.medicamento.msc:9090/archiva/repository/internal</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Internal Snapshot Repository</name>
+            <url>dav:http://archiva.medicamento.msc:9090/archiva/repository/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
