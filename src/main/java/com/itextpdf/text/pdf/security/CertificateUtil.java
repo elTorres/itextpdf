@@ -122,6 +122,10 @@ public class CertificateUtil {
 	                continue;
 	            }
 	            DERIA5String derStr = DERIA5String.getInstance((ASN1TaggedObject)name.toASN1Primitive(), false);
+				// Continue if no http resource
+				if (derStr == null || derStr.getString() == null
+						|| !derStr.getString().toLowerCase().startsWith("http"))
+					continue;
 	            return derStr.getString();
 	        }
 	    }
