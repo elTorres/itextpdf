@@ -44,25 +44,6 @@
  */
 package com.itextpdf.text.pdf.security;
 
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.io.RASInputStream;
-import com.itextpdf.text.io.RandomAccessSource;
-import com.itextpdf.text.io.RandomAccessSourceFactory;
-import com.itextpdf.text.io.StreamUtil;
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
-import com.itextpdf.text.pdf.AcroFields;
-import com.itextpdf.text.pdf.ByteBuffer;
-import com.itextpdf.text.pdf.PdfArray;
-import com.itextpdf.text.pdf.PdfDate;
-import com.itextpdf.text.pdf.PdfDeveloperExtension;
-import com.itextpdf.text.pdf.PdfDictionary;
-import com.itextpdf.text.pdf.PdfName;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfSignature;
-import com.itextpdf.text.pdf.PdfSignatureAppearance;
-import com.itextpdf.text.pdf.PdfString;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -75,6 +56,25 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.io.RASInputStream;
+import com.itextpdf.text.io.RandomAccessSource;
+import com.itextpdf.text.io.RandomAccessSourceFactory;
+import com.itextpdf.text.io.StreamUtil;
+import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.ByteBuffer;
+import com.itextpdf.text.pdf.PdfArray;
+import com.itextpdf.text.pdf.PdfDate;
+import com.itextpdf.text.pdf.PdfDeveloperExtension;
+import com.itextpdf.text.pdf.PdfDictionary;
+import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfSignature;
+import com.itextpdf.text.pdf.PdfSignatureAppearance;
+import com.itextpdf.text.pdf.PdfString;
+
 /**
  * Class that signs your PDF.
  * @author Paulo Soares
@@ -82,7 +82,7 @@ import java.util.HashMap;
 public class MakeSignature {
 
 	/** The Logger instance. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(MakeSignature.class);
+    private static final Logger LOGGER = Logger.getLogger(MakeSignature.class);
 
     public enum CryptoStandard {
     	CMS, CADES
@@ -180,9 +180,12 @@ public class MakeSignature {
                 continue;
             LOGGER.info("Processing " + cc.getClass().getName());
             Collection<byte[]> b = cc.getEncoded((X509Certificate)cert, null);
-            if (b == null)
-                continue;
-            crlBytes.addAll(b);
+			if (b == null) {
+				LOGGER.info("NULL response adding CRL " + cc.getClass().getName());
+				continue;
+			}
+			crlBytes.addAll(b);
+			LOGGER.info("Added CRL " + cc.getClass().getName());
         }
         if (crlBytes.isEmpty())
             return null;
