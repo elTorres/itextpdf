@@ -52,9 +52,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.itextpdf.text.io.RandomAccessSourceFactory;
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
+import org.apache.log4j.Logger;
+
 import com.itextpdf.text.pdf.RandomAccessFileOrArray;
 
 /**
@@ -63,24 +62,22 @@ import com.itextpdf.text.pdf.RandomAccessFileOrArray;
  */
 public abstract class OpenTypeFontTableReader {
 
-	protected static final Logger LOG = LoggerFactory
-			.getLogger(OpenTypeFontTableReader.class);
+	protected static final Logger LOG = Logger.getLogger(OpenTypeFontTableReader.class);
 
 	protected final RandomAccessFileOrArray rf;
 	protected final int tableLocation;
-	
+
 	private List<String> supportedLanguages;
 
-	public OpenTypeFontTableReader(RandomAccessFileOrArray rf, int tableLocation)
-			throws IOException {
+	public OpenTypeFontTableReader(RandomAccessFileOrArray rf, int tableLocation) throws IOException {
 		this.rf = rf;
 		this.tableLocation = tableLocation;
 	}
-	
-	public Language getSupportedLanguage() throws FontReadingException { 
-		
+
+	public Language getSupportedLanguage() throws FontReadingException {
+
 		Language[] allLangs = Language.values();
-		
+
 		for (String supportedLang : supportedLanguages) {
 			for (Language lang : allLangs) {
 				if (lang.isSupported(supportedLang)) {
@@ -88,15 +85,15 @@ public abstract class OpenTypeFontTableReader {
 				}
 			}
 		}
-		
-		throw new FontReadingException("Unsupported languages " + supportedLanguages); 
+
+		throw new FontReadingException("Unsupported languages " + supportedLanguages);
 	}
 
 	/**
-	 * This is the starting point of the class. A sub-class must call this
-	 * method to start getting call backs to the {@link #readSubTable(int, int)}
-	 * method.
-	 * @throws FontReadingException 
+	 * This is the starting point of the class. A sub-class must call this method to start getting call backs to the
+	 * {@link #readSubTable(int, int)} method.
+	 * 
+	 * @throws FontReadingException
 	 */
 	protected final void startReadingTable() throws FontReadingException {
 		try {
@@ -114,11 +111,9 @@ public abstract class OpenTypeFontTableReader {
 		}
 	}
 
-	protected abstract void readSubTable(int lookupType, int subTableLocation)
-			throws IOException;
+	protected abstract void readSubTable(int lookupType, int subTableLocation) throws IOException;
 
-	private void readLookupListTable(int lookupListTableLocation)
-			throws IOException {
+	private void readLookupListTable(int lookupListTableLocation) throws IOException {
 		rf.seek(lookupListTableLocation);
 		int lookupCount = rf.readShort();
 
@@ -128,14 +123,14 @@ public abstract class OpenTypeFontTableReader {
 			int lookupTableOffset = rf.readShort();
 			lookupTableOffsets.add(lookupTableOffset);
 		}
-		
+
 		// read LookUp tables
 		for (int i = 0; i < lookupCount; i++) {
-//			LOG.debug("#############lookupIndex=" + i);
+			//			LOG.debug("#############lookupIndex=" + i);
 			int lookupTableOffset = lookupTableOffsets.get(i);
 			readLookupTable(lookupListTableLocation + lookupTableOffset);
 		}
-		
+
 	}
 
 	private void readLookupTable(int lookupTableLocation) throws IOException {
@@ -162,8 +157,7 @@ public abstract class OpenTypeFontTableReader {
 		}
 	}
 
-	protected final List<Integer> readCoverageFormat(int coverageLocation)
-			throws IOException {
+	protected final List<Integer> readCoverageFormat(int coverageLocation) throws IOException {
 		rf.seek(coverageLocation);
 		int coverageFormat = rf.readShort();
 
@@ -190,8 +184,7 @@ public abstract class OpenTypeFontTableReader {
 			}
 
 		} else {
-			throw new UnsupportedOperationException("Invalid coverage format: "
-					+ coverageFormat);
+			throw new UnsupportedOperationException("Invalid coverage format: " + coverageFormat);
 		}
 
 		return Collections.unmodifiableList(glyphIds);
@@ -201,61 +194,56 @@ public abstract class OpenTypeFontTableReader {
 		int startGlyphId = rf.readShort();
 		int endGlyphId = rf.readShort();
 		int startCoverageIndex = rf.readShort();
-		
+
 		for (int glyphId = startGlyphId; glyphId <= endGlyphId; glyphId++) {
 			glyphIds.add(glyphId);
 		}
-		
-//		LOG.debug("^^^^^^^^^Coverage Format 2.... " 
-//				+ "startGlyphId=" + startGlyphId
-//				+ ", endGlyphId=" + endGlyphId
-//				+ ", startCoverageIndex=" + startCoverageIndex 
-//				+ "\n, glyphIds" + glyphIds);
+
+		//		LOG.debug("^^^^^^^^^Coverage Format 2.... " 
+		//				+ "startGlyphId=" + startGlyphId
+		//				+ ", endGlyphId=" + endGlyphId
+		//				+ ", startCoverageIndex=" + startCoverageIndex 
+		//				+ "\n, glyphIds" + glyphIds);
 
 	}
 
-	private void readScriptListTable(int scriptListTableLocationOffset)
-			throws IOException {
+	private void readScriptListTable(int scriptListTableLocationOffset) throws IOException {
 		rf.seek(scriptListTableLocationOffset);
 		// Number of ScriptRecords
 		int scriptCount = rf.readShort();
 
-		Map<String, Integer> scriptRecords = new HashMap<String, Integer>(
-				scriptCount);
+		Map<String, Integer> scriptRecords = new HashMap<String, Integer>(scriptCount);
 
 		for (int i = 0; i < scriptCount; i++) {
 			readScriptRecord(scriptListTableLocationOffset, scriptRecords);
 		}
-		
+
 		List<String> supportedLanguages = new ArrayList<String>(scriptCount);
 
 		for (String scriptName : scriptRecords.keySet()) {
 			readScriptTable(scriptRecords.get(scriptName));
 			supportedLanguages.add(scriptName);
 		}
-		
+
 		this.supportedLanguages = Collections.unmodifiableList(supportedLanguages);
 	}
 
-	private void readScriptRecord(final int scriptListTableLocationOffset,
-			Map<String, Integer> scriptRecords) throws IOException {
+	private void readScriptRecord(final int scriptListTableLocationOffset, Map<String, Integer> scriptRecords)
+			throws IOException {
 		String scriptTag = rf.readString(4, "utf-8");
 
 		int scriptOffset = rf.readShort();
 
-		scriptRecords.put(scriptTag, scriptListTableLocationOffset
-				+ scriptOffset);
+		scriptRecords.put(scriptTag, scriptListTableLocationOffset + scriptOffset);
 	}
 
-	private void readScriptTable(final int scriptTableLocationOffset)
-			throws IOException {
+	private void readScriptTable(final int scriptTableLocationOffset) throws IOException {
 		rf.seek(scriptTableLocationOffset);
 		int defaultLangSys = rf.readShort();
 		int langSysCount = rf.readShort();
 
 		if (langSysCount > 0) {
-			Map<String, Integer> langSysRecords = new LinkedHashMap<String, Integer>(
-					langSysCount);
+			Map<String, Integer> langSysRecords = new LinkedHashMap<String, Integer>(langSysCount);
 
 			for (int i = 0; i < langSysCount; i++) {
 				readLangSysRecord(langSysRecords);
@@ -263,8 +251,7 @@ public abstract class OpenTypeFontTableReader {
 
 			// read LangSys tables
 			for (String langSysTag : langSysRecords.keySet()) {
-				readLangSysTable(scriptTableLocationOffset
-						+ langSysRecords.get(langSysTag));
+				readLangSysTable(scriptTableLocationOffset + langSysRecords.get(langSysTag));
 			}
 		}
 
@@ -272,15 +259,13 @@ public abstract class OpenTypeFontTableReader {
 		readLangSysTable(scriptTableLocationOffset + defaultLangSys);
 	}
 
-	private void readLangSysRecord(Map<String, Integer> langSysRecords)
-			throws IOException {
+	private void readLangSysRecord(Map<String, Integer> langSysRecords) throws IOException {
 		String langSysTag = rf.readString(4, "utf-8");
 		int langSys = rf.readShort();
 		langSysRecords.put(langSysTag, langSys);
 	}
 
-	private void readLangSysTable(final int langSysTableLocationOffset)
-			throws IOException {
+	private void readLangSysTable(final int langSysTableLocationOffset) throws IOException {
 		rf.seek(langSysTableLocationOffset);
 		int lookupOrderOffset = rf.readShort();
 		LOG.debug("lookupOrderOffset=" + lookupOrderOffset);
@@ -297,28 +282,24 @@ public abstract class OpenTypeFontTableReader {
 
 	}
 
-	private void readFeatureListTable(final int featureListTableLocationOffset)
-			throws IOException {
+	private void readFeatureListTable(final int featureListTableLocationOffset) throws IOException {
 		rf.seek(featureListTableLocationOffset);
 		int featureCount = rf.readShort();
 		LOG.debug("featureCount=" + featureCount);
 
-		Map<String, Short> featureRecords = new LinkedHashMap<String, Short>(
-				featureCount);
+		Map<String, Short> featureRecords = new LinkedHashMap<String, Short>(featureCount);
 		for (int i = 0; i < featureCount; i++) {
 			featureRecords.put(rf.readString(4, "utf-8"), rf.readShort());
 		}
 
 		for (String featureName : featureRecords.keySet()) {
 			LOG.debug("*************featureName=" + featureName);
-			readFeatureTable(featureListTableLocationOffset
-					+ featureRecords.get(featureName));
+			readFeatureTable(featureListTableLocationOffset + featureRecords.get(featureName));
 		}
 
 	}
 
-	private void readFeatureTable(final int featureTableLocationOffset)
-			throws IOException {
+	private void readFeatureTable(final int featureTableLocationOffset) throws IOException {
 		rf.seek(featureTableLocationOffset);
 		int featureParamsOffset = rf.readShort();
 		LOG.debug("featureParamsOffset=" + featureParamsOffset);
@@ -331,7 +312,7 @@ public abstract class OpenTypeFontTableReader {
 			lookupListIndices.add(rf.readShort());
 		}
 
-//		LOG.debug("lookupListIndices=" + lookupListIndices);
+		//		LOG.debug("lookupListIndices=" + lookupListIndices);
 
 	}
 
@@ -349,8 +330,7 @@ public abstract class OpenTypeFontTableReader {
 		// LOG.debug("featureListOffset=" + featureListOffset);
 		// LOG.debug("lookupListOffset=" + lookupListOffset);
 
-		TableHeader header = new TableHeader(version, scriptListOffset,
-				featureListOffset, lookupListOffset);
+		TableHeader header = new TableHeader(version, scriptListOffset, featureListOffset, lookupListOffset);
 
 		return header;
 	}

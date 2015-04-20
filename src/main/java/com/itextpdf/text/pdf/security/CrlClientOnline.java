@@ -57,9 +57,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.itextpdf.text.error_messages.MessageLocalization;
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
 
 /**
  * An implementation of the CrlClient that fetches the CRL bytes
@@ -69,7 +69,7 @@ import com.itextpdf.text.log.LoggerFactory;
 public class CrlClientOnline implements CrlClient {
 
 	/** The Logger instance. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(CrlClientOnline.class);
+    private static final Logger LOGGER = Logger.getLogger(CrlClientOnline.class);
     
     /** The URLs of the CRLs. */
     protected List<URL> urls = new ArrayList<URL>();

@@ -57,6 +57,8 @@ import java.security.Security;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.ocsp.OCSPObjectIdentifiers;
 import org.bouncycastle.asn1.x509.Extension;
@@ -75,11 +77,7 @@ import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 
 import com.itextpdf.text.error_messages.MessageLocalization;
 import com.itextpdf.text.io.StreamUtil;
-import com.itextpdf.text.log.Level;
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
 import com.itextpdf.text.pdf.PdfEncryption;
-import com.itextpdf.text.pdf.RandomAccessFileOrArray;
 
 /**
  * OcspClient implementation using BouncyCastle.
@@ -88,7 +86,7 @@ import com.itextpdf.text.pdf.RandomAccessFileOrArray;
 public class OcspClientBouncyCastle implements OcspClient {
 	
 	/** The Logger instance */
-    private static final Logger LOGGER = LoggerFactory.getLogger(OcspClientBouncyCastle.class);
+    private static final Logger LOGGER = Logger.getLogger(OcspClientBouncyCastle.class);
 
     /**
      * Generates an OCSP request using BouncyCastle.
@@ -158,8 +156,7 @@ public class OcspClientBouncyCastle implements OcspClient {
             return (BasicOCSPResp) ocspResponse.getResponseObject();
         }
         catch (Exception ex) {
-            if (LOGGER.isLogging(Level.ERROR))
-                LOGGER.error(ex.getMessage());
+            LOGGER.error(ex.getMessage());
         }
         return null;
     }
@@ -193,8 +190,7 @@ public class OcspClientBouncyCastle implements OcspClient {
             }
         }
         catch (Exception ex) {
-            if (LOGGER.isLogging(Level.ERROR))
-                LOGGER.error(ex.getMessage());
+            LOGGER.error(ex.getMessage());
         }
         return null;
     }

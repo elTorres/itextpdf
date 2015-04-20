@@ -44,6 +44,33 @@
  */
 package com.itextpdf.text.pdf;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.security.Key;
+import java.security.MessageDigest;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.zip.InflaterInputStream;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cms.CMSEnvelopedData;
+import org.bouncycastle.cms.RecipientInformation;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.ExceptionConverter;
 import com.itextpdf.text.PageSize;
@@ -55,23 +82,12 @@ import com.itextpdf.text.exceptions.UnsupportedPdfException;
 import com.itextpdf.text.io.RandomAccessSource;
 import com.itextpdf.text.io.RandomAccessSourceFactory;
 import com.itextpdf.text.io.WindowRandomAccessSource;
-import com.itextpdf.text.log.*;
+import com.itextpdf.text.log.Counter;
+import com.itextpdf.text.log.CounterFactory;
 import com.itextpdf.text.pdf.PRTokeniser.TokenType;
 import com.itextpdf.text.pdf.interfaces.PdfViewerPreferences;
 import com.itextpdf.text.pdf.internal.PdfViewerPreferencesImp;
 import com.itextpdf.text.pdf.security.ExternalDecryptionProcess;
-import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.cms.CMSEnvelopedData;
-import org.bouncycastle.cms.RecipientInformation;
-
-import java.io.*;
-import java.net.URL;
-import java.security.Key;
-import java.security.MessageDigest;
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
-import java.util.*;
-import java.util.zip.InflaterInputStream;
 
 /**
  * Reads a PDF document.
@@ -88,7 +104,7 @@ public class PdfReader implements PdfViewerPreferences {
 	public static boolean unethicalreading = false;
 	
 	public static boolean debugmode = false;
-	private static final Logger LOGGER = LoggerFactory.getLogger(PdfReader.class);
+	private static final Logger LOGGER = Logger.getLogger(PdfReader.class);
 	
     static final PdfName pageInhCandidates[] = {
         PdfName.MEDIABOX, PdfName.ROTATE, PdfName.RESOURCES, PdfName.CROPBOX
@@ -1249,8 +1265,7 @@ public class PdfReader implements PdfViewerPreferences {
         }
         catch (IOException e) {
         	if (debugmode) {
-                if (LOGGER.isLogging(Level.ERROR))
-                    LOGGER.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
         		obj = null;
         	}
         	else
@@ -1350,8 +1365,7 @@ public class PdfReader implements PdfViewerPreferences {
             }
             catch (IOException e) {
             	if (debugmode) {
-                    if (LOGGER.isLogging(Level.ERROR))
-                        LOGGER.error(e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
             		obj = null;
             	}
             	else

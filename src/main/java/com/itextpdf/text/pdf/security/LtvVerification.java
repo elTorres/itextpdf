@@ -58,6 +58,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1Enumerated;
 import org.bouncycastle.asn1.ASN1InputStream;
@@ -69,8 +70,6 @@ import org.bouncycastle.asn1.ocsp.OCSPObjectIdentifiers;
 
 import com.itextpdf.text.Utilities;
 import com.itextpdf.text.error_messages.MessageLocalization;
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PRIndirectReference;
 import com.itextpdf.text.pdf.PdfArray;
@@ -91,7 +90,7 @@ import com.itextpdf.text.pdf.PdfWriter;
  */
 public class LtvVerification {
 	
-	private Logger LOGGER = LoggerFactory.getLogger(LtvVerification.class);
+	private Logger LOGGER = Logger.getLogger(LtvVerification.class);
 	
     private PdfStamper stp;
     private PdfWriter writer;

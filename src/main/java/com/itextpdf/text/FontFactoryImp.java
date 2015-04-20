@@ -50,10 +50,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Set;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import com.itextpdf.text.Font.FontFamily;
-import com.itextpdf.text.log.Level;
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
 import com.itextpdf.text.pdf.BaseFont;
 
 /**
@@ -66,7 +66,7 @@ import com.itextpdf.text.pdf.BaseFont;
 
 public class FontFactoryImp implements FontProvider {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FontFactoryImp.class);
+	private static final Logger LOGGER = Logger.getLogger(FontFactoryImp.class);
 /** This is a map of postscriptfontnames of True Type fonts and the path of their ttf- or ttc-file. */
     private final Hashtable<String, String> trueTypeFonts = new Hashtable<String, String>();
 
@@ -499,7 +499,7 @@ public class FontFactoryImp implements FontProvider {
                 trueTypeFonts.put(psName, path);
                 trueTypeFonts.put(fullName, path);
             }
-            if (LOGGER.isLogging(Level.TRACE)) {
+            if (LOGGER.isTraceEnabled()) {
         		LOGGER.trace(String.format("Registered %s", path));
         	}
         }
@@ -528,7 +528,7 @@ public class FontFactoryImp implements FontProvider {
      * @since 2.1.2
      */
     public int registerDirectory(final String dir, final boolean scanSubdirectories) {
-    	if (LOGGER.isLogging(Level.DEBUG)) {
+    	if (LOGGER.isDebugEnabled()) {
     		LOGGER.debug(String.format("Registering directory %s, looking for fonts", dir));
     	}
         int count = 0;

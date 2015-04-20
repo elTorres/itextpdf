@@ -44,19 +44,30 @@
  */
 package com.itextpdf.text.pdf;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.error_messages.MessageLocalization;
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
-import com.itextpdf.text.pdf.PdfPTable.FittingRows;
-import com.itextpdf.text.pdf.draw.DrawInterface;
-import com.itextpdf.text.pdf.interfaces.IAccessibleElement;
-import com.itextpdf.text.pdf.languages.ArabicLigaturizer;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
+
+import org.apache.log4j.Logger;
+
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.ExceptionConverter;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.ListBody;
+import com.itextpdf.text.ListItem;
+import com.itextpdf.text.ListLabel;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.error_messages.MessageLocalization;
+import com.itextpdf.text.pdf.PdfPTable.FittingRows;
+import com.itextpdf.text.pdf.draw.DrawInterface;
+import com.itextpdf.text.pdf.interfaces.IAccessibleElement;
+import com.itextpdf.text.pdf.languages.ArabicLigaturizer;
 
 /**
  * Formats text in a columnwise form. The text is bound on the left and on the
@@ -85,7 +96,7 @@ import java.util.Stack;
  */
 public class ColumnText {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(ColumnText.class);
+    private final Logger LOGGER = Logger.getLogger(ColumnText.class);
 
     /**
      * Eliminate the arabic vowels

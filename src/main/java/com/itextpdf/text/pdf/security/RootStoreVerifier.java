@@ -53,8 +53,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Verifies a certificate against a <code>KeyStore</code>
@@ -63,7 +62,7 @@ import com.itextpdf.text.log.LoggerFactory;
 public class RootStoreVerifier extends CertificateVerifier {
 	
 	/** The Logger instance */
-	protected final static Logger LOGGER = LoggerFactory.getLogger(RootStoreVerifier.class);
+	protected final static Logger LOGGER = Logger.getLogger(RootStoreVerifier.class);
 
 	/** A key store against which certificates can be verified. */
 	protected KeyStore rootStore = null;

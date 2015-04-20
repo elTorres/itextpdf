@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.ocsp.BasicOCSPResp;
@@ -64,9 +65,6 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.bc.BcDigestCalculatorProvider;
 import org.bouncycastle.operator.jcajce.JcaContentVerifierProviderBuilder;
 
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
-
 /**
  * Class that allows you to verify a certificate against
  * one or more OCSP responses.
@@ -74,7 +72,7 @@ import com.itextpdf.text.log.LoggerFactory;
 public class OCSPVerifier extends RootStoreVerifier {
 	
 	/** The Logger instance */
-	protected final static Logger LOGGER = LoggerFactory.getLogger(OCSPVerifier.class);
+	protected final static Logger LOGGER = Logger.getLogger(OCSPVerifier.class);
 	
 	/** The list of OCSP responses. */
 	protected List<BasicOCSPResp> ocsps;

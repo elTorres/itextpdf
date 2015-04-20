@@ -44,6 +44,13 @@
  */
 package com.itextpdf.text.pdf;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
 import com.itextpdf.text.AccessibleElementId;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.DocumentException;
@@ -55,15 +62,8 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.api.Spaceable;
 import com.itextpdf.text.error_messages.MessageLocalization;
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
 import com.itextpdf.text.pdf.events.PdfPTableEventForwarder;
 import com.itextpdf.text.pdf.interfaces.IAccessibleElement;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This is a table that can be put at an absolute position but can also be added
@@ -76,7 +76,7 @@ import java.util.Map;
  */
 public class PdfPTable implements LargeElement, Spaceable, IAccessibleElement {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(PdfPTable.class);
+    private final Logger LOGGER = Logger.getLogger(PdfPTable.class);
     /**
      * The index of the original <CODE>PdfcontentByte</CODE>.
      */

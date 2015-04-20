@@ -46,9 +46,15 @@ package com.itextpdf.text.pdf;
 
 import java.util.HashMap;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
+import org.apache.log4j.Logger;
+
+import com.itextpdf.text.AccessibleElementId;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.ExceptionConverter;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.interfaces.IAccessibleElement;
 
 /**
@@ -58,7 +64,7 @@ import com.itextpdf.text.pdf.interfaces.IAccessibleElement;
  */
 public class PdfPRow implements IAccessibleElement {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(PdfPRow.class);
+    private final Logger LOGGER = Logger.getLogger(PdfPRow.class);
 
     /**
      * True if the table may not break after this row.

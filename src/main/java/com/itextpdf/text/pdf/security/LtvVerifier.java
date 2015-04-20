@@ -56,12 +56,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.bouncycastle.cert.ocsp.BasicOCSPResp;
 import org.bouncycastle.cert.ocsp.OCSPException;
 import org.bouncycastle.cert.ocsp.OCSPResp;
 
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PRStream;
 import com.itextpdf.text.pdf.PdfArray;
@@ -75,7 +74,7 @@ import com.itextpdf.text.pdf.security.LtvVerification.CertificateOption;
  */
 public class LtvVerifier extends RootStoreVerifier {
 	/** The Logger instance */
-	protected final static Logger LOGGER = LoggerFactory.getLogger(LtvVerifier.class);
+	protected final static Logger LOGGER = Logger.getLogger(LtvVerifier.class);
 	
 	/** Do we need to check all certificate, or only the signing certificate? */
 	protected CertificateOption option = CertificateOption.SIGNING_CERTIFICATE;

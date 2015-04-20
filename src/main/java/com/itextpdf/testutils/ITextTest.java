@@ -44,15 +44,15 @@
  */
 package com.itextpdf.testutils;
 
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
+import java.io.File;
 
 import javax.management.OperationsException;
-import java.io.File;
+
+import org.apache.log4j.Logger;
 
 public abstract class ITextTest {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ITextTest.class.getName());
+    private final static Logger LOGGER =  Logger.getLogger(ITextTest.class);
 
     public void runTest() throws Exception {
         LOGGER.info("Starting test.");
